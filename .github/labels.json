@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Documentation",
+    "color": "0175ca"
+  },
+  {
+    "name": "Dupulicate",
+    "color": "cfd3d7"
+  },
+  {
+    "name": "Help wanted",
+    "color": "008672"
+  },
+  {
+    "name": "Refactoring",
+    "color": "D19821"
+  },
+  {
+    "name": "Bug",
+    "color": "f75149"
+  },
+  {
+    "name": "Enhamcement",
+    "color": "a2eeef"
+  },
+  {
+    "name": "Feature",
+    "color": "7057ff"
+  },
+  {
+    "name": "Invalid",
+    "color": "e3e668"
+  },
+  {
+    "name": "Question",
+    "color": "d876e3"
+  },
+  {
+    "name": "wontfix",
+    "color": "ffffff"
+  }
+]
