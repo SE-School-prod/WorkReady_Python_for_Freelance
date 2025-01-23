@@ -80,11 +80,11 @@ instructor_id_list = {
         "mail": None,
         "id": "366f97862ac54ffdb341fb08301015b9",
     },
-    # "00001": {
-    #     "name": "福山成",
-    #     "mail": "fukunaru11@gmail.com",
-    #     "id": "826887e69e6040c2a8d491c0ad91c03a",
-    # },
+    "00001": {
+        "name": "福山成",
+        "mail": "fukunaru11@gmail.com",
+        "id": "826887e69e6040c2a8d491c0ad91c03a",
+    },
     # "00002": {
     #     "name": "高橋毅",
     #     "mail": "tk_031@outlook.jp",
