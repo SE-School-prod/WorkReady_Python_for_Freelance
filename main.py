@@ -353,5 +353,5 @@ def test_id():
 if __name__ == "__main__":
     main()
     # keep_alive.keep_alive()  # server
-    bot.run(settings_dict["TOKEN"]["DISCORD"])  # debug
-    # bot.run(os.environ["DISCORD_TOKEN"])  # server
+    # bot.run(settings_dict["TOKEN"]["DISCORD"])  # debug
+    bot.run(os.environ["DISCORD_TOKEN"])  # server
