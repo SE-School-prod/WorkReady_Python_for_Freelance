@@ -69,6 +69,7 @@ database_id_list = {
     "00027": "6ce33427a01c4132ad10ca6ec9afbdfc",  # 株式会社RESTA様
     "00028": "15f795f96fce81da8f81d0a7592b2a9a",  # 中村　勇真様
     "00029": "16f795f96fce81a7b3fff05e5dbcfacc",  # 秋山美里様
+    "00030": "190795f96fce81e8b6d6ffcb02c86b32",  # 鈴木郁哉様 
     "99999": "bee6832fb35c4c2c8ac829b3338c5a96",  # テストDB(共有)
     # "test": "0235ca24d99a4fb49f0b1a30d54601f8", # テストDB(メール送信)
 }
@@ -110,11 +111,11 @@ instructor_id_list = {
         "mail": "sky1618item@gmail.com",
         "id": "a3e44576699447b082bcb1e6083d1504",
     },
-    "00007": {
-        "name": "山形敦己",
-        "mail": "kirikiri.3535@gmail.com",
-        "id": "d3496467e15f484cbcc1f1ebda325fed",
-    },
+    # "00007": {
+    #     "name": "山形敦己",
+    #     "mail": "kirikiri.3535@gmail.com",
+    #     "id": "d3496467e15f484cbcc1f1ebda325fed",
+    # },
     "00008": {
         "name": "濱田優一",
         "mail": "ilovemrchildrensazan@gmail.com",
