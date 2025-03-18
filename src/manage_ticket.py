@@ -16,8 +16,9 @@ import discord
 import platform
 import pytz
 from settings.settings_dict import settings_dict
-from settings.database_id_list import database_id_list
+from settings.database_id_list import database_id_list, instructor_id_list
 from error_handling.error_message import ErrorMessage
+from src.mail import Mail
 from .notion import Notion
 from .change_roll import check_cariculam
 import re
@@ -66,7 +67,10 @@ async def accept_consultation_services(message, logger, guild):
                     
                     #チケットの枚数確認
                     ticket_free,ticket_30,ticket_60 = get_ticket_num(database_id=database_id, user_id=user_id, logger=logger, guild=guild)
-                    
+
+                    # 講師への相談会通知メール送信フラグを初期化する(True: 送信する, False: 送信しない)
+                    is_send_mail_flg = True
+
                     #30分相談会の場合
                     if consultation_type == "30分相談会":
                         
@@ -144,6 +148,9 @@ async def accept_consultation_services(message, logger, guild):
                                 f"★60分有料相談チケットはこちら\n"
                                 f"https://buy.stripe.com/8wM9D4gWR3JSeIg00g\n"
                             )
+
+                            # 対応するチケットが存在しない場合、メール送信フラグを更新する。
+                            is_send_mail_flg = False
                             
                     #60分有料相談の場合
                     elif consultation_type == "60分相談会":
@@ -285,7 +292,35 @@ async def accept_consultation_services(message, logger, guild):
                                 f"https://buy.stripe.com/8wM9D4gWR3JSeIg00g\n"
                             )
 
+                            # 対応するチケットが存在しない場合、メール送信フラグを更新する。
+                            is_send_mail_flg = False
+
                     await message.channel.send(reply)
+
+                    if is_send_mail_flg:
+
+                        # message情報から受講生ロール情報を割り出し、担当講師
+                        for had_role in message.author.roles:
+                            role_name = had_role.name
+                            if role_name[:2] == "講師":
+                                instructor_id_key = role_name[2:7]
+                                instructor_name = instructor_id_list[instructor_id_key]["name"]
+                                break
+
+                        # Mailマネージャ初期化
+                        mail = Mail()
+
+                        instructor_info = {
+                            "name": instructor_name
+                        }
+                        student_info = {
+                            "name": username,
+                            "agent_id": get_messemger_name.split("_")[1],
+                            "ticket": consultation_type,
+                            "message": command
+                        }
+
+                        mail.send_mail_accept_consultation_services(instructor_info, student_info)
 
                 elif len(results_id) == 0:
                     reply = f"該当するユーザが見つかりませんでした。"
