@@ -24,43 +24,29 @@ class Mail:
         self._smtp_obj.close()
 
     """
-    @func send_assigin_mail_to_instructor
-    @brief 講師割り当て時メール送信機能
-    @param instructor_info[dict] 講師情報
-    @param student_info[dict] 受講生情報
-    @return なし
+    def send_ban_mail(self, username_with_db_id, id):
+        username_dbid_pair = username_with_db_id.split("_")
+        username = username_dbid_pair[0]
+        database_id = database_id_list[username_dbid_pair[1]]
+
+        subject = '【重要なお知らせ】退会措置とIT技術学習費用のお支払いについて'
+        text = username + '様\n\n'\
+            'お世話になっております。\n'\
+            'Work Ready運営でございます。\n\n'\
+            '大変申し訳ございませんが、この度、当スクールの利用規約に違反が判明しました。これに基づき、強制退会措置を取らせていただくこととなりました。また、IT技術学習費用についての請求もさせていただきます。\n\n'\
+            '以下のリンクより、請求金額の確認と一括でのお支払いをお願い申し上げます。なお、お支払い期限は本メール受信月の月末となっております。\n'\
+            '**https://buy.stripe.com/14kcPg8qlcgo0Rq9AF**\n\n'\
+            '何卒、ご理解とご協力のほどよろしくお願い申し上げます。'
+
+        message = MIMEText(text)
+        message['Subject'] = subject
+        # message['From'] = self._source_address
+        message['From'] = email.utils.formataddr(
+            ('Work Ready運営', self._source_address))
+        message['To'] = self._get_mail_address_from_id(database_id, id)
+
+        self._smtp_obj.send_message(message)
     """
-    def send_assigin_mail_to_instructor(self, instructor_info, student_info):
-        subject = '【お知らせ】受講生割り当てのお知らせ'
-        content = instructor_info["name"] + "様\n\n"\
-            'いつもお世話になっております。\n'\
-            'WorkReady運営です。\n\n'\
-            'この度' + instructor_info["name"] + "様が下記受講生のご担当となりましたことをご連絡いたします。\n\n"\
-            "・受講生氏名: " + student_info["name"] +"\n"\
-            "・担当代理店: " + student_info["agent_id"] + "\n"\
-            "・コース: " + student_info["course"] + "\n"\
-            "・卒業予定日: " + student_info["graduate_date"] + "\n\n"\
-            "つきましては「面談日程調整」チャンネルにて上記受講生と初回面談の日程調整をお願いいたします。\n"\
-            "以上、よろしくお願いいたします。\n\n"\
-            "WorkReady運営"
-
-        self.send_mail(subject, content, instructor_info["mail"])
-
-    def send_mail_accept_consultation_services(self, instructor_info, student_info):
-        subject = '【お知らせ】相談会予約のお知らせ'
-        content = instructor_info["name"] + "様\n\n"\
-            'いつもお世話になっております。\n'\
-            'WorkReady運営です。\n\n'\
-            'この度、ご担当頂いております' + student_info["name"] + "様より相談会をご依頼いただきましたことをご連絡いたします。\n\n"\
-            "■受講生氏名\n" + student_info["name"] +"\n\n"\
-            "■担当代理店\n" + student_info["agent_id"] + "\n\n"\
-            "■相談会チケット種別\n" + student_info["ticket"] + "\n\n"\
-            "■相談会内容:\n" + student_info["message"] + "\n\n"\
-            "つきましては「チケット制相談チャンネル」チャンネルにて上記受講生と相談会の日程調整をお願いいたします。\n"\
-            "以上、よろしくお願いいたします。\n\n"\
-            "WorkReady運営"
-
-        self.send_mail(subject, content, instructor_info["mail"])
 
     def send_mail(self, username_with_db_id, id, exe_mode):
         username_dbid_pair = username_with_db_id.split("_")

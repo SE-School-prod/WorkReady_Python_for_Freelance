@@ -11,10 +11,8 @@
 """
 
 import discord
-import datetime
 
 from .notion import Notion
-from src.mail import Mail
 from error_handling.error_message import ErrorMessage
 from settings.settings_dict import settings_dict
 from settings.database_id_list import database_id_list, instructor_id_list
@@ -120,6 +118,17 @@ async def check_beginner(message, logger, guild):
                             instructor_id = instructor_id_list[instructor_id_key]["id"]
                             break
 
+
+                    """
+                    instructor_id_key = create_notion_instructor_info(message)
+
+                    role_name_instructor = "講師" + instructor_id_key + \
+                        "_" + instructor_id_list[instructor_id_key]["name"]
+                    print("role_name_instructor: ", role_name_instructor)
+
+                    role_instructor = discord.utils.get(message.guild.roles, name=role_name_instructor)
+                    await message.author.add_roles(role_instructor)
+                    """
                     filter_dict_indivisual = {
                         "名前": username,
                         "代理店番号": database_key,
@@ -147,17 +156,6 @@ async def check_beginner(message, logger, guild):
                     await message.author.remove_roles(role_beginner)
                     await message.author.add_roles(role_progate)
                     logger.info("role {} has add.".format("Progate"))
-
-                    instructor_info = instructor_id_list[instructor_id_key].copy()
-                    student_info = {
-                        "name": username,
-                        "agent_id": database_key,
-                        "course": "Python",
-                        "graduate_date": result["created_time"]
-                    }
-
-                    mail = Mail()
-                    mail.send_assigin_mail_to_instructor(instructor_info, student_info)
 
                     # await message.delete()
                     messages = [message async for message in message.channel.history(limit=None)]

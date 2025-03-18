@@ -121,9 +121,4 @@ instructor_id_list = {
         "mail": "ilovemrchildrensazan@gmail.com",
         "id": "ed55fc9001a345208383a96a1e1bc0be",
     },
-    "99999": {
-        "name": "test",
-        "mail": "ra0039ip@gmail.com",
-        "id": "1ba795f96fce81f2876ee565cc008d17",
-    },
 }
