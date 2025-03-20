@@ -16,8 +16,9 @@ import discord
 import platform
 import pytz
 from settings.settings_dict import settings_dict
-from settings.database_id_list import database_id_list
+from settings.database_id_list import database_id_list, instructor_id_list
 from error_handling.error_message import ErrorMessage
+from src.mail import Mail
 from .notion import Notion
 from .change_roll import check_cariculam
 import re
@@ -50,13 +51,23 @@ async def accept_consultation_services(message, logger, guild):
                 # user_idを取得する
                 user_id = str(message.author.id)
                 
+                # message情報から受講生ロール情報を割り出し、担当講師
+                for had_role in message.author.roles:
+                    role_name = had_role.name
+                    if role_name[:2] == "講師":
+                        instructor_id_key = role_name[2:7]
+                        instructor_info = instructor_id_list[instructor_id_key]
+                        break
+
                 #無料チケットの有効期限確認
                 expiration_date = confirm_ticket_expired(database_id, username, user_id, logger, guild)
+                expiration_date_instructor = confirm_ticket_expired(instructor_info["id"], username, user_id, logger, guild)
 
                 # user_idとdatabase_idでユーザの特定
                 notion = Notion()
                 filter_dict = {'ユーザーID': user_id}
                 results_id = notion.select(database_id, filter_dict)
+                results_id_instructor = notion.select(instructor_info["id"], filter_dict)
                 # 在籍状況を変更する
                 # 検索結果が一意に定まった時
                 if len(results_id) == 1:
@@ -66,7 +77,10 @@ async def accept_consultation_services(message, logger, guild):
                     
                     #チケットの枚数確認
                     ticket_free,ticket_30,ticket_60 = get_ticket_num(database_id=database_id, user_id=user_id, logger=logger, guild=guild)
-                    
+
+                    # 講師への相談会通知メール送信フラグを初期化する(True: 送信する, False: 送信しない)
+                    is_send_mail_flg = True
+
                     #30分相談会の場合
                     if consultation_type == "30分相談会":
                         
@@ -77,6 +91,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                           filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -88,14 +103,7 @@ async def accept_consultation_services(message, logger, guild):
                                 f"\n"
                                 fr"```"
                             )
-                            """
-                            if platform.platform().split('-')[0] == 'Linux':
-                                now_tz = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-                                temp_dt = now_tz.strftime('%Y-%m-%d %H:%M:%S.%f')
-                                now = datetime.datetime.strptime(temp_dt, '%Y-%m-%d %H:%M:%S.%f')
-                            else:
-                                now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-                            """
+
                             now = datetime.datetime.now(
                                 pytz.timezone('Asia/Tokyo'))
                             log_message = "ユーザID: {}, ユーザ名: {}, 更新日時: {}".format(
@@ -108,6 +116,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                             filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -144,6 +153,9 @@ async def accept_consultation_services(message, logger, guild):
                                 f"★60分有料相談チケットはこちら\n"
                                 f"https://buy.stripe.com/8wM9D4gWR3JSeIg00g\n"
                             )
+
+                            # 対応するチケットが存在しない場合、メール送信フラグを更新する。
+                            is_send_mail_flg = False
                             
                     #60分有料相談の場合
                     elif consultation_type == "60分相談会":
@@ -155,6 +167,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                           filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -186,6 +199,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                           filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -217,6 +231,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                           filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -248,6 +263,7 @@ async def accept_consultation_services(message, logger, guild):
                             ]
                             notion.update(page_id=page_id,
                                           filter_dicts_list=filter_dicts_list)
+                            notion.update(page_id=results_id_instructor[0]["id"], filter_dicts_list=filter_dicts_list)
                             reply = (
                                 f"<@{user_id}>さん\n"
                                 f"ご相談内容を受理いたしました。\n"
@@ -285,7 +301,24 @@ async def accept_consultation_services(message, logger, guild):
                                 f"https://buy.stripe.com/8wM9D4gWR3JSeIg00g\n"
                             )
 
+                            # 対応するチケットが存在しない場合、メール送信フラグを更新する。
+                            is_send_mail_flg = False
+
                     await message.channel.send(reply)
+
+                    if is_send_mail_flg:
+
+                        # Mailマネージャ初期化
+                        mail = Mail()
+
+                        student_info = {
+                            "name": username,
+                            "agent_id": get_messemger_name.split("_")[1],
+                            "ticket": consultation_type,
+                            "message": command
+                        }
+
+                        mail.send_mail_accept_consultation_services(instructor_info, student_info)
 
                 elif len(results_id) == 0:
                     reply = f"該当するユーザが見つかりませんでした。"

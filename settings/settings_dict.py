@@ -17,9 +17,9 @@ settings_dict = {
     "TOKEN": {
         "NOTION":
         'secret_013tQKTmEmdOOWcBgcPBTKNN3wAOzgQhTSkN2t63M2U',  # Notionのトークン
-        "DISCORD":
-        # 'MTIzNDAxMTkxMTgyNjE4MjIxOA.GZl6T7.lJzT2LvCLpN1MRUzzYG_h1MlJUzniOE26bqVyg',  # Discordのトークン(Java)
-        'MTA5ODEwNDI1OTkyNjU3MzA3Ng.GV4SGN.VioIFVMRIsJ-PXlc45wecvdi-X2QPYSep-_e70',  # Discordのトークン(Python)
+        # "DISCORD":
+        # # 'MTIzNDAxMTkxMTgyNjE4MjIxOA.GZl6T7.lJzT2LvCLpN1MRUzzYG_h1MlJUzniOE26bqVyg',  # Discordのトークン(Java)
+        # 'MTE1MTU1NTM5MTMxNDk5NzI5MA.G0unoh.HzIwT0aAEqGC9ot0M9yG1h7lD1Ewxc-nQOddTs',  # Discordのトークン(Python)
     },
     "GUILD_ID": {
         "GUILD": 1093886520324259920,  # DiscordのWorkReadyチャットグループID
