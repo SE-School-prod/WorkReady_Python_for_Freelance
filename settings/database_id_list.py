@@ -116,9 +116,9 @@ instructor_id_list = {
     #     "mail": "kirikiri.3535@gmail.com",
     #     "id": "d3496467e15f484cbcc1f1ebda325fed",
     # },
-    "00008": {
-        "name": "濱田優一",
-        "mail": "ilovemrchildrensazan@gmail.com",
-        "id": "ed55fc9001a345208383a96a1e1bc0be",
-    },
+    # "00008": {
+    #     "name": "濱田優一",
+    #     "mail": "ilovemrchildrensazan@gmail.com",
+    #     "id": "ed55fc9001a345208383a96a1e1bc0be",
+    # },
 }
